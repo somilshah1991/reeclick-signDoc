@@ -337,6 +337,18 @@ DOWNLOAD BUTTON
             font-size: 13px;
         }
 
+        @media(max-width:768px) {
+
+            #downloadPDF {
+
+                width: 100%;
+
+                padding: 14px 0;
+
+            }
+
+        }
+
         /*=============================
 RESPONSIVE
 =============================*/
@@ -672,6 +684,7 @@ PRINT
 <script>
 
     const canvas = document.getElementById("clientCanvas");
+    const providerSignatureCanvas = document.getElementById("providerSignature");
 
 function resizeCanvas() {
 
@@ -681,6 +694,8 @@ function resizeCanvas() {
 
     canvas.width = rect.width * ratio;
     canvas.height = rect.height * ratio;
+
+    providerSignatureCanvas.height = canvas.height;
 
     const ctx = canvas.getContext("2d");
 
@@ -697,7 +712,7 @@ const signaturePad = new SignaturePad(canvas,{
 
 resizeCanvas();
 
-window.addEventListener("resize",resizeCanvas);
+
 
 document
 .getElementById("clearClient")
@@ -745,12 +760,31 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAADICAYAAAAeGRPoAAAQAElEQVR4Ae
 
         const agreement = document.getElementById("agreement");
 
+        await document.fonts.ready;
+
+        const imgs = agreement.querySelectorAll("img");
+
+        await Promise.all(
+            [...imgs].map(img => {
+
+                if(img.complete) return;
+
+                return new Promise(resolve=>{
+
+                    img.onload=resolve;
+
+                });
+
+            })
+        );
+
         const canvas = await html2canvas(agreement, {
             scale: 2,
-
             useCORS: true,
-
             backgroundColor: "#ffffff",
+            windowWidth: 1200,
+            scrollX: 0,
+            scrollY: 0
         });
 
         const imgData = canvas.toDataURL("image/png");
@@ -792,6 +826,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAADICAYAAAAeGRPoAAAQAElEQVR4Ae
         pdf.save(fileName);
 
         document.getElementById("loader").style.display = "none";
+        
     }
 </script>
 
