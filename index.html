@@ -754,6 +754,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAADICAYAAAAeGRPoAAAQAElEQVR4Ae
             pageBreak.dataset.display = pageBreak.style.display;
             pageBreak.style.marginTop = "15px";
             pageBreak.style.padding = "20px";
+            pageBreak.nextElementSibling.style.marginTop = "20px";
         });
 
         const { jsPDF } = window.jspdf;
@@ -783,6 +784,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAADICAYAAAAeGRPoAAAQAElEQVR4Ae
             useCORS: true,
             backgroundColor: "#ffffff",
             windowWidth: 1200,
+            windowHeight: 6074,
             scrollX: 0,
             scrollY: 0
         });
@@ -791,7 +793,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAADICAYAAAAeGRPoAAAQAElEQVR4Ae
 
         const pdf = new jsPDF("p", "mm", "a4");
 
-
+        console.log("canvas.height", canvas.height);
         const pdfWidth = 210;
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
