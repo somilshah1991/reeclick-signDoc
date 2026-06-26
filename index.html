@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
     <title>ReeClick - Social Media Management Agreement</title>
 
@@ -17,12 +17,16 @@
         }
 
         body {
+            margin: 0;
+            padding: 15px;
             background: #eef2f7;
-            padding: 40px;
+            overflow-x: hidden;
         }
 
         #agreement {
-            width: 794px;
+            width: 100%;
+
+            max-width: 794px;
 
             margin: auto;
 
@@ -33,6 +37,15 @@
             border-radius: 16px;
 
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        @media(max-width:768px) {
+            
+            #agreement {
+
+                padding: 15px;
+
+            }
         }
 
         /*=============================
@@ -59,6 +72,22 @@ HEADER
         .subtitle {
             font-size: 16px;
             color: #777;
+        }
+
+        @media(max-width:768px) {
+
+            header h1, h1 {
+
+                font-size: 18px;
+
+            }
+
+            h2 {
+
+                font-size: 12px;
+
+            }
+
         }
 
         /*=============================
@@ -91,6 +120,16 @@ CLIENT CARDS
             line-height: 1.6;
         }
 
+        @media(max-width:768px) {
+
+            .partyDetails {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
         /*=============================
 SECTIONS
 =============================*/
@@ -121,6 +160,22 @@ SECTIONS
         li {
             margin-bottom: 10px;
             font-size: 16px;
+        }
+
+        @media(max-width:768px) {
+            
+            section h2 {
+
+                font-size: 18px;
+
+            }
+
+            section p, li {
+
+                font-size: 14px;
+
+            }
+
         }
 
         /*=================================
@@ -170,6 +225,26 @@ Payment Terms
             border-top: 1px solid #ececec;
         }
 
+        @media(max-width:768px) {
+
+            .paymentItem {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 8px;
+
+            }
+
+            .paymentValue {
+
+                text-align: left;
+
+            }
+
+        }
+
         /*=============================
 SIGNATURE AREA
 =============================*/
@@ -213,6 +288,18 @@ SIGNATURE AREA
 
         .signatureCard button:hover {
             background: #333;
+        }
+
+        @media(max-width:768px) {
+
+            .signatureContainer {
+
+                flex-direction: column;
+
+                gap: 20px;
+
+            }
+
         }
 
         /*=============================
@@ -318,6 +405,12 @@ PRINT
         }
 
         canvas {
+
+            width: 100%;
+
+            height: 180px;
+
+            display: block;
 
             touch-action: none;
 
@@ -579,12 +672,13 @@ PRINT
 
     function resizeCanvas(canvas) {
 
-        const rect = canvas.getBoundingClientRect();
-
         const ratio = window.devicePixelRatio || 1;
 
+        const rect = canvas.getBoundingClientRect();
+
         canvas.width = rect.width * ratio;
-        canvas.height = rect.height * ratio;
+
+        canvas.height = 180 * ratio;
 
         const ctx = canvas.getContext("2d");
 
@@ -593,6 +687,12 @@ PRINT
     }
 
     resizeCanvas(document.getElementById("clientCanvas"));
+
+    window.addEventListener("resize",()=>{
+
+        resizeCanvas(document.getElementById("clientCanvas"));
+
+        });
 
 
     function SignaturePad(canvasId, clearButtonId) {
@@ -610,22 +710,33 @@ PRINT
             const rect = canvas.getBoundingClientRect();
 
             const scaleX = canvas.width / rect.width;
+
             const scaleY = canvas.height / rect.height;
 
             let clientX, clientY;
 
             if (e.touches) {
+
                 clientX = e.touches[0].clientX;
+
                 clientY = e.touches[0].clientY;
+
             } else {
+
                 clientX = e.clientX;
+
                 clientY = e.clientY;
+
             }
 
             return {
+
                 x: (clientX - rect.left) * scaleX,
+
                 y: (clientY - rect.top) * scaleY
+
             };
+
         }
 
         function start(e) {
