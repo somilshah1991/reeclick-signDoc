@@ -316,6 +316,12 @@ PRINT
                 display: none;
             }
         }
+
+        canvas {
+
+            touch-action: none;
+
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -389,7 +395,7 @@ PRINT
 
                 <b> 2 reasonable revisions </b>
 
-                per post. Additional revisions will be chargeable.
+                per post.
             </p>
         </section>
 
@@ -514,7 +520,7 @@ PRINT
                 <div class="signatureCard">
                     <h3>Client Signature</h3>
 
-                    <canvas id="clientCanvas" width="350" height="180"> </canvas>
+                    <canvas id="clientCanvas"> </canvas>
 
                     <button id="clearClient">Clear Signature</button>
 
@@ -570,6 +576,25 @@ PRINT
 </body>
 
 <script>
+
+    function resizeCanvas(canvas) {
+
+        const rect = canvas.getBoundingClientRect();
+
+        const ratio = window.devicePixelRatio || 1;
+
+        canvas.width = rect.width * ratio;
+        canvas.height = rect.height * ratio;
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.scale(ratio, ratio);
+
+    }
+
+    resizeCanvas(document.getElementById("clientCanvas"));
+
+
     function SignaturePad(canvasId, clearButtonId) {
         const canvas = document.getElementById(canvasId);
         const ctx = canvas.getContext("2d");
@@ -581,20 +606,26 @@ PRINT
         let drawing = false;
 
         function getPosition(e) {
+
             const rect = canvas.getBoundingClientRect();
 
-            let x;
-            let y;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            let clientX, clientY;
 
             if (e.touches) {
-                x = e.touches[0].clientX - rect.left;
-                y = e.touches[0].clientY - rect.top;
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
             } else {
-                x = e.clientX - rect.left;
-                y = e.clientY - rect.top;
+                clientX = e.clientX;
+                clientY = e.clientY;
             }
 
-            return { x, y };
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
         }
 
         function start(e) {
@@ -645,7 +676,7 @@ PRINT
         canvas.addEventListener("mouseleave", stop);
 
         canvas.addEventListener("touchstart", start);
-        canvas.addEventListener("touchmove", draw);
+        canvas.addEventListener("touchmove", draw, { passive: false });
         canvas.addEventListener("touchend", stop);
 
         document
@@ -666,7 +697,7 @@ PRINT
 
     SignaturePad("clientCanvas", "clearClient");
 
-    SignaturePad("providerCanvas", "clearProvider");
+
 </script>
 
 <script>
